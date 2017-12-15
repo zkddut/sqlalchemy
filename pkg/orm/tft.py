@@ -10,7 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 #TODO: inheritate from bluecopper base class
-class TFT_Experimen(Base):
+class TFT_Experiment(Base):
 
     __tablename__ = 'tft_experiment'
 
@@ -38,7 +38,7 @@ class TFT_Experiment_Attribute(Base):
 
     exp_id = Column('experiment_id', String(100), primary_key = True, nullable = False)
     attr_name_id = Column('attr_name_id', Integer, 
-                        ForeignKey('tft_schema_attribute.schema_id'),
+                        ForeignKey('tft_attribute_names.attr_name_id'),
                         nullable=False
                       )
     property_id = Column('property_id', Integer)
@@ -64,6 +64,7 @@ class TFT_Attribute_Name(Base):
 
     schema_attribute = relationship("TFT_Schema_Attribute")
     sample_attribute = relationship("TFT_Sample_Attribute")
+    experiment_attribute = relationship("TFT_Experiment_Attribute")
 
     # @validates()
 
@@ -78,13 +79,16 @@ class TFT_Schema_Attribute(Base):
 
     __tablename__ = 'tft_schema_attribute'
 
-    schema_id = Column('schema_id', String)
+    schema_id = Column('schema_id', Integer, primary_key = True, nullable = False)
     schema_name = Column('schema_name', String)
-    attr_name_id = Column('attr_name_id', String)
+    attr_name_id = Column('attr_name_id', Integer, ForeignKey('tft_attribute_names.attr_name_id'), nullable=False)
     attr_is_required = Column('attr_is_required', String)
     attr_is_group = Column('attr_is_group', String)
-    attr_is_identifier = Column('attr_is_identifier', String)
+    attr_is_identifier = Column('attr_is_identifier', Integer, ForeignKey('tft_identifier_source.attr_name_id', nullable=False))
     attr_is_annotation = Column('attr_is_annotation', String)
+
+    schema_attribute = relationship("TFT_Experiment")
+    attribute_names = relationship("TFT_Attribute_Name")
 
     # @validates()
 
@@ -99,8 +103,10 @@ class TFT_Identifier_Sourc(Base):
 
     __tablename__ = 'tft_identifier_source'
 
-    attr_name_id = Column('attr_name_id', String)
+    attr_name_id = Column('attr_name_id', Integer, primary_key = True, nullable = False)
     attr_url = Column('attr_url', String)
+
+    schema_attribute = relationship("TFT_Schema_Attribute")
 
     # @validates()
 
@@ -111,7 +117,7 @@ class TFT_Identifier_Sourc(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Experiment_Ru(Base):
+class TFT_Experiment_Run(Base):
 
     __tablename__ = 'tft_experiment_run'
 
@@ -127,7 +133,7 @@ class TFT_Experiment_Ru(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Run_Sampl(Base):
+class TFT_Run_Sample(Base):
 
     __tablename__ = 'tft_run_sample'
 
@@ -143,7 +149,7 @@ class TFT_Run_Sampl(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Exp_Analysi(Base):
+class TFT_Exp_Analysis(Base):
 
     __tablename__ = 'tft_exp_analysis'
 
@@ -159,7 +165,7 @@ class TFT_Exp_Analysi(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Sample_Attribute(Base):
+class TFT_Sample_Attributes(Base):
 
     __tablename__ = 'tft_sample_attributes'
 
@@ -176,7 +182,7 @@ class TFT_Sample_Attribute(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Analysis_Comparison(Base):
+class TFT_Analysis_Comparisons(Base):
 
     __tablename__ = 'tft_analysis_comparisons'
 
@@ -192,7 +198,7 @@ class TFT_Analysis_Comparison(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Property_Relation(Base):
+class TFT_Property_Relations(Base):
 
     __tablename__ = 'tft_property_relations'
 
@@ -209,7 +215,7 @@ class TFT_Property_Relation(Base):
 
 
 #TODO: inheritate from bluecopper base class
-class TFT_Comparison(Base):
+class TFT_Comparisons(Base):
 
     __tablename__ = 'tft_comparisons'
 
